@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone 
 
 # Create your models here.
 class Book(models.Model):
@@ -7,13 +8,15 @@ class Book(models.Model):
     ## title (char)
     ## author  (char)
     ## publication year -> pub_year (int)
-    def __init__(self):
-        title = models.CharField(max_length=200)
-        author = models.CharField(max_length=200)
-        pub_year = models.IntegerField(default=0)
+    title    = models.CharField(max_length=200)
+    author   = models.CharField(max_length=200)
+    pub_year = models.IntegerField(default=timezone.now())
     
-    # Method for taking input the data
-    def __input__(self, title, author, pub_year):
+
+    # Constructor
+    """
+    def __init__(self, title, author, pub_year):
         self.title    = title 
         self.author   = author 
         self.pub_year = pub_year
+    """   
