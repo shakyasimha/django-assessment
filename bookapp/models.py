@@ -13,6 +13,9 @@ class Book(models.Model):
     pub_year = models.IntegerField(default=timezone.now())
     
 
+    def __str__(self):
+        return self.title
+
     # Constructor
     """
     def __init__(self, title, author, pub_year):
