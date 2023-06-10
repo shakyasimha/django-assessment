@@ -2,10 +2,21 @@ from django.urls import path
 
 from . import views
 
+
+"""
+    Template names, just for reference:
+
+    - book_list.html 
+    - book_detail.html 
+    - book_form.html 
+    - book_confirm_delete.html
+
+"""
+
 urlpatterns = [
-    path('', views.BookListView.as_view(), name='all'),
-    path('bookapp/<int:pk>/detail', views.BookDetailView.as_view(), name='book_detail'),
-    path('bookapp/create/', views.BookCreateView.as_view(), name='book_create'),
-    path('bookapp/<int:pk>/update/', views.BookUpdateView.as_view(), name='book_update'),
-    path('bookapp/<int:pk>/delete/', views.BookDeleteView.as_view(), name='book_delete')
+    path('', views.book_list, name='book_list'),
+    path('view/<int:pk>', views.book_view, name='book_view'),
+    path('new', views.book_create, name='book_new'),
+    path('edit/<int:pk>', views.book_update, name='book_edit'), 
+    path('delete/<int:pk>', views.book_delete, name='book_delete'),
 ]
