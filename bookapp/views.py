@@ -5,25 +5,11 @@ from .models import Book
 
 
 """
-    CRUD operations in this view:
-
-    - book_list()
-    - book_view()
-    - book_create()
-    - book_update()
-    - book_delete()
-
-"""
-
-
-"""
     Template names, just for reference:
 
     - book_list.html 
     - book_detail.html 
-    - book_form.html 
-    - book_confirm_delete.html
-
+    - book_create.html
 
 """
 
@@ -31,6 +17,7 @@ class BookView(View):
     template_name = 'book_list.html'
     form_class = BookForm 
 
+    ## For retrieving book entries
     def get(self, request, pk=None):
         if pk:
             book = get_object_or_404(Book, pk=pk)
@@ -40,8 +27,10 @@ class BookView(View):
         return render(request, self.template_name, {'books': books})
 
 
+    ## For creating new book entries
     def post(self, request, pk=None):
         form = self.form_class(request.POST)
+
         if form.is_valid():
             form.save()
             return redirect('book_list')
@@ -49,15 +38,19 @@ class BookView(View):
             return render(request, 'book_create.html', {'form': form})
     
 
+    ## For updating book entries
     def put(self, request, pk=None):
         book = get_object_or_404(Book, pk=pk)
         form = self.form_class(request.POST, instance=book)
+
         if form.is_valid():
             form.save()
             return redirect('book_list')
         else:
             return render(request, 'book_update.html', {'form': form, 'book': book})
     
+
+    ## For deleting the book entry
     def delete(self, request, pk=None):
         book = get_object_or_404(Book, pk=pk)
         book.delete()
