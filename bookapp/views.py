@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
-from bookapp.forms import BookForm 
-from bookapp.models import Book 
+from django.views import View
+from .forms import BookForm 
+from .models import Book 
 
 
 """
@@ -27,57 +27,38 @@ from bookapp.models import Book
 
 """
 
+class BookView(View):
+    template_name = 'book_list.html'
+    form_class = BookForm 
+
+    def get(self, request, pk=None):
+        if pk:
+            book = get_object_or_404(Book, pk=pk)
+            return render(request, 'book_detail.html', {'book': book})
+        
+        books = Book.objects.all()
+        return render(request, self.template_name, {'books': books})
 
 
-## Lists down the books
-def book_list(request, template_name='books/book_list.html'):
-    book = Book.objects.all() 
-    data = {}
-    data['object_list'] = book 
-
-    return render(request, template_name, data)
-
-
-## For viewing the books
-def book_view(request, pk, template_name='books/book_detail.html'):
-    book = get_object_or_404(Book, pk=pk)
+    def post(self, request, pk=None):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+        else:
+            return render(request, 'book_create.html', {'form': form})
     
-    return render(request, template_name, {object: 'book'})
 
-
-
-## For creating a book entry
-def book_create(request, template_name='books/book_form.html'):
-    form = BookForm(request.POST or None)
-
-    if form.is_valid():
-        form.save() 
+    def put(self, request, pk=None):
+        book = get_object_or_404(Book, pk=pk)
+        form = self.form_class(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+        else:
+            return render(request, 'book_update.html', {'form': form, 'book': book})
+    
+    def delete(self, request, pk=None):
+        book = get_object_or_404(Book, pk=pk)
+        book.delete()
         return redirect('book_list')
-    
-    return render(request, template_name, {'form': form})
-
-
-
-## For updating a book entry
-def book_update(request, pk, template_name='books/book_form.html'):
-    book = get_object_or_404(Book, pk=pk)
-    form = BookForm(request.POST or None, instance=book)
-
-    if form.is_valid():
-        form.save()
-
-        return redirect('book_list')
-    
-    return render(request, template_name, {'form': form})
-
-
-## For deleting the book 
-def book_delete(request, pk, template_name='books/book_confirm_delete.html'):
-    book = get_object_or_404(Book, pk=pk)
-
-    if request.method == 'POST':
-        book.delete() 
-
-        return redirect('book_list')
-    
-    return render(request, template_name, {'object': book})
