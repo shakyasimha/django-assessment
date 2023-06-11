@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content%}
+    <h1>Create New Book</h1>
+        
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+
+    <a href="{% url 'book_list' %}">Back to Book List</a>
+{% endblock %}
