@@ -6,5 +6,5 @@ app_name = 'bookapp'
 
 urlpatterns = [
     path('', BookView.as_view(), name='book_list'),
-    path('<int:pk>/', BookView.as_view(), name='book_detail')
+    path('book_detail/<int:pk>/', BookView.as_view(), name='book_detail')
 ]

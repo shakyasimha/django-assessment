@@ -15,6 +15,7 @@ from .models import Book
 
 class BookView(View):
     template_name = 'book_list.html'
+    #template_name = 'book_detail.html'
     form_class = BookForm 
 
     ## For retrieving book entries
@@ -54,4 +55,4 @@ class BookView(View):
     def delete(self, request, pk=None):
         book = get_object_or_404(Book, pk=pk)
         book.delete()
-        return redirect('book_list')
+        return redirect('book_list.html')
